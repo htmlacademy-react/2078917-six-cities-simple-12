@@ -1,44 +1,20 @@
 import { Helmet } from 'react-helmet-async';
-import Logo from '../../components/logo/logo';
-import PlaceCard from '../../components/place-card/place-card';
+import Header from '../../components/header/header';
+import PlaceCardList from '../../components/place-card-list/place-card-list';
+import { Offer } from '../../types/offer';
 
 type MainProps = {
   placeNum: number;
+  offers: Offer[];
 };
 
-export default function Main({placeNum}: MainProps): JSX.Element {
+export default function Main({ placeNum, offers }: MainProps): JSX.Element {
   return (
     <>
       <Helmet>
         <title>Six cities</title>
       </Helmet>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Logo />
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <div className="header__nav-profile">
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
-                    </span>
-                  </div>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="/">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+      <Header userInfo = {undefined} />
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
@@ -113,13 +89,7 @@ export default function Main({placeNum}: MainProps): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-                <PlaceCard />
-              </div>
+              <PlaceCardList offers={offers} />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map"></section>
