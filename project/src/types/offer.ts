@@ -1,13 +1,17 @@
+export type Point = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
+
+export type City = {
+  location: Point;
+  name: string;
+};
+
 export type Offer = {
   bedrooms: number;
-  city: {
-    location: {
-      latitude: number;
-      longitude: number;
-      zoom: number;
-    };
-    name: string;
-  };
+  city: City;
   description: string;
   goods: string[];
   host: {
@@ -19,11 +23,7 @@ export type Offer = {
   id: number;
   images: string[];
   isPremium: boolean;
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
+  location: Point;
   maxAdults: number;
   previewImage: string;
   price: number;

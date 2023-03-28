@@ -5,23 +5,22 @@ type StarRatingProps = {
   id: number;
   onChange: (currentStarsCount: number) => void;
   isChecked: boolean;
-}
+};
 
 export default function StarRating({
   id,
   onChange,
-  isChecked
+  isChecked,
 }: StarRatingProps): JSX.Element {
-
   const starsCount = id + 1;
 
   return (
     <>
       <input
-        className="form__rating-input visually-hidden"
-        name="rating"
+        className='form__rating-input visually-hidden'
+        name='rating'
         id={`${starsCount}-stars`}
-        type="radio"
+        type='radio'
         checked={isChecked}
         onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
           onChange(Number(target.value));
@@ -30,11 +29,15 @@ export default function StarRating({
       />
       <label
         htmlFor={`${starsCount}-stars`}
-        className="reviews__rating-label form__rating-label"
+        className='reviews__rating-label form__rating-label'
         title={CommentStarTitle[id]}
       >
-        <svg className="form__star-image" width="37" height="33">
-          <use xlinkHref="#icon-star"></use>
+        <svg
+          className='form__star-image'
+          width='37'
+          height='33'
+        >
+          <use xlinkHref='#icon-star'></use>
         </svg>
       </label>
     </>

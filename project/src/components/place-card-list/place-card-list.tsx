@@ -1,21 +1,39 @@
-import { useState } from 'react';
+import { CardType } from '../../const';
 import { Offer } from '../../types/offer';
 import PlaceCard from '../place-card/place-card';
+import cn from 'classnames';
 
 type PlaceCardListProps = {
   offers: Offer[];
+  onOfferHover: (offer: Offer) => void;
+  onOfferLeave: () => void;
+  cardType: CardType;
 };
 
-export default function PlaceCardList({offers}: PlaceCardListProps): JSX.Element {
-  const [activeCardId, setActiveCard] = useState(-1);
-
+export default function PlaceCardList({
+  offers,
+  onOfferHover,
+  onOfferLeave,
+  cardType,
+}: PlaceCardListProps): JSX.Element {
   return (
-    <div className="cities__places-list places__list tabs__content">
-      {
-        offers.map((offer) => (
-          <PlaceCard key={offer.id} offer={offer} />
-        ))
-      }
+    <div
+      className={cn(
+        'places__list',
+        { 'cities__places-list': cardType === CardType.Offer },
+        { 'near-places__list': cardType === CardType.NearByOffer },
+        { 'tabs__content': cardType === CardType.Offer }
+      )}
+    >
+      {offers.map((offer) => (
+        <PlaceCard
+          key={`card-item-${offer.id}`}
+          offer={offer}
+          onMouseEnter={() => onOfferHover(offer)}
+          onMouseLeave={onOfferLeave}
+          cardType={cardType}
+        />
+      ))}
     </div>
   );
 }
