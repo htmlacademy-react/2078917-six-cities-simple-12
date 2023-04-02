@@ -13,7 +13,7 @@ import {
 } from '../../utils';
 import NotFound from '../not-found/not-found';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
-import { CardType } from '../../const';
+import { OfferCardType } from '../../const';
 import { useState } from 'react';
 
 type RoomProps = {
@@ -190,7 +190,7 @@ export default function Room({
               offers={nearbyOffers}
               onOfferHover={(nearbyOffer: Offer) => setSelectedOffer(nearbyOffer)}
               onOfferLeave={() => setSelectedOffer(undefined)}
-              cardType={CardType.NearByOffer}
+              cardType={OfferCardType.NearByOffer}
             />
           </section>
         </div>

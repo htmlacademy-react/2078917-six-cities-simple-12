@@ -1,5 +1,8 @@
+import { RATING_STARS_NUMBER } from './const';
+
 export function getPercentByRating(rating: number): string {
-  return `${String(Math.round(rating) * 20)}%`;
+  const roundedRating = Math.round(rating) * 100 / RATING_STARS_NUMBER;
+  return `${roundedRating > 100 ? 100 : roundedRating}%`;
 }
 
 export function getTitleApartmentByType(type: string): string {

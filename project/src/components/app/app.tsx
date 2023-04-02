@@ -6,17 +6,21 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import PrivateRoute from '../private-route/private-route';
 import { HelmetProvider } from 'react-helmet-async';
-import { Offer } from '../../types/offer';
 import { CommentForOffer } from '../../types/comment';
 import ScrollToTop from '../scroll-to-top/scroll-to-top';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
+import { loadOffers } from '../../store/action';
+import { offers } from '../../mocks/offers';
 
 type AppProps = {
-  placeNum: number;
-  offers: Offer[];
   comments: CommentForOffer[];
 };
 
-export default function App({ placeNum, offers, comments }: AppProps): JSX.Element {
+export default function App({ comments }: AppProps): JSX.Element {
+
+  const dispatch = useAppDispatch();
+  dispatch(loadOffers(offers));
+
   return (
     <HelmetProvider>
       <BrowserRouter>
@@ -27,7 +31,7 @@ export default function App({ placeNum, offers, comments }: AppProps): JSX.Eleme
               index
               element={
                 <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-                  <Main placeNum={placeNum} offers={offers} />
+                  <Main />
                 </PrivateRoute>
               }
             />

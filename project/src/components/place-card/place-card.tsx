@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CardType } from '../../const';
+import { OfferCardType } from '../../const';
 import { Offer } from '../../types/offer';
 import { getPercentByRating } from '../../utils';
 import cn from 'classnames';
@@ -8,7 +8,7 @@ type PlaceCardProps = {
   offer: Offer;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  cardType: CardType;
+  cardType: OfferCardType;
 };
 
 export default function PlaceCard({
@@ -24,8 +24,8 @@ export default function PlaceCard({
     <article
       className={cn(
         'place-card',
-        { 'cities__card': cardType === CardType.Offer },
-        { 'near-places__card': cardType === CardType.NearByOffer }
+        { 'cities__card': cardType === OfferCardType.Offer },
+        { 'near-places__card': cardType === OfferCardType.NearByOffer }
       )}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -38,8 +38,8 @@ export default function PlaceCard({
       <div
         className={cn(
           'place-card__image-wrapper',
-          { 'cities__image-wrapper': cardType === CardType.Offer },
-          { 'near-places__image-wrapper': cardType === CardType.NearByOffer }
+          { 'cities__image-wrapper': cardType === OfferCardType.Offer },
+          { 'near-places__image-wrapper': cardType === OfferCardType.NearByOffer }
         )}
       >
         <Link to={`/offer/${id}`}>

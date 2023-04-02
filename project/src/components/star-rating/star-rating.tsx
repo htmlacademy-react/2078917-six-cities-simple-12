@@ -1,9 +1,8 @@
-import { ChangeEvent } from 'react';
 import { CommentStarTitle } from '../../const';
 
 type StarRatingProps = {
   id: number;
-  onChange: (currentStarsCount: number) => void;
+  onChange: () => void;
   isChecked: boolean;
 };
 
@@ -22,9 +21,7 @@ export default function StarRating({
         id={`${starsCount}-stars`}
         type='radio'
         checked={isChecked}
-        onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
-          onChange(Number(target.value));
-        }}
+        onChange={onChange}
         value={starsCount}
       />
       <label
