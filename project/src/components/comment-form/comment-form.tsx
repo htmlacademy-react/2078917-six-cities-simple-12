@@ -1,7 +1,8 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import {
   MAX_CHARACTERS_IN_COMMENT,
   MIN_CHARACTERS_IN_COMMENT,
+  RATING_STARS_NUMBER,
 } from '../../const';
 import StarRating from '../star-rating/star-rating';
 
@@ -13,12 +14,27 @@ export default function CommentForm(): JSX.Element {
 
   const [isButtonEnabled, setButtonEnabled] = useState(false);
 
+  useEffect(() => {
+    if (
+      comment.comment.length >= MIN_CHARACTERS_IN_COMMENT &&
+      comment.comment.length <= MAX_CHARACTERS_IN_COMMENT &&
+      comment.stars > 0
+    ) {
+      setButtonEnabled(true);
+    } else {
+      setButtonEnabled(false);
+    }
+  }, [comment.stars, comment.comment]);
+
   return (
     <form
       className='reviews__form form'
       onSubmit={(evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
-        // console.log(userComment);
+        setComment({
+          stars: 0,
+          comment: '',
+        });
       }}
     >
       <label
@@ -28,19 +44,20 @@ export default function CommentForm(): JSX.Element {
         Your review
       </label>
       <div className='reviews__rating-form form__rating'>
-        {Array.from({ length: 5 }).map((_, index, array) => {
-          const revertIndex = array.length - index - 1;
+        {Array.from({ length: RATING_STARS_NUMBER }).map((_, index) => {
+          const revertIndex = RATING_STARS_NUMBER - index - 1;
+          const starsNumber = revertIndex + 1;
           return (
             <StarRating
-              key={revertIndex}
+              key={`star-rating-${revertIndex}`}
               id={revertIndex}
-              onChange={(starsNumber: number) => {
+              onChange={() => {
                 setComment({
                   ...comment,
                   stars: starsNumber,
                 });
               }}
-              isChecked={comment.stars === revertIndex + 1}
+              isChecked={comment.stars === starsNumber}
             />
           );
         })}
@@ -56,15 +73,8 @@ export default function CommentForm(): JSX.Element {
             ...comment,
             comment: target.value,
           });
-          setButtonEnabled(
-            target.value !== '' &&
-              target.value.length >= MIN_CHARACTERS_IN_COMMENT &&
-              target.value.length <= MAX_CHARACTERS_IN_COMMENT &&
-              comment.stars > 0
-          );
         }}
-      >
-      </textarea>
+      ></textarea>
       <div className='reviews__button-wrapper'>
         <p className='reviews__help'>
           To submit review please make sure to set{' '}

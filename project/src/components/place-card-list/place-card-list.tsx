@@ -1,4 +1,4 @@
-import { CardType } from '../../const';
+import { OfferCardType } from '../../const';
 import { Offer } from '../../types/offer';
 import PlaceCard from '../place-card/place-card';
 import cn from 'classnames';
@@ -7,7 +7,7 @@ type PlaceCardListProps = {
   offers: Offer[];
   onOfferHover: (offer: Offer) => void;
   onOfferLeave: () => void;
-  cardType: CardType;
+  cardType: OfferCardType;
 };
 
 export default function PlaceCardList({
@@ -20,9 +20,9 @@ export default function PlaceCardList({
     <div
       className={cn(
         'places__list',
-        { 'cities__places-list': cardType === CardType.Offer },
-        { 'near-places__list': cardType === CardType.NearByOffer },
-        { 'tabs__content': cardType === CardType.Offer }
+        { 'cities__places-list': cardType === OfferCardType.Offer },
+        { 'near-places__list': cardType === OfferCardType.NearByOffer },
+        { 'tabs__content': cardType === OfferCardType.Offer }
       )}
     >
       {offers.map((offer) => (

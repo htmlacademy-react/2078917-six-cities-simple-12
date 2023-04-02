@@ -52,6 +52,7 @@ export default function Map(props: MapProps): JSX.Element {
     <div
       style={{ height: '100%' }}
       ref={mapRef}
-    ></div>
+    >
+    </div>
   );
 }
