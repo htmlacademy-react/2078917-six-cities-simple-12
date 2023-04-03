@@ -74,7 +74,8 @@ export default function CommentForm(): JSX.Element {
             comment: target.value,
           });
         }}
-      ></textarea>
+      >
+      </textarea>
       <div className='reviews__button-wrapper'>
         <p className='reviews__help'>
           To submit review please make sure to set{' '}
