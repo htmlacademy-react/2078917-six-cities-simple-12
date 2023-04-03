@@ -4,11 +4,15 @@ import TabsList from '../../components/tabs-list/tabs-list';
 import CityPlaces from '../../components/city-places/city-places';
 import { Helmet } from 'react-helmet-async';
 import cn from 'classnames';
+import { SortTypeFunctionsMap } from '../../maps';
 
 export default function Main(): JSX.Element {
   const city = useAppSelector((state) => state.city);
   const allOffers = useAppSelector((state) => state.offers);
-  const offers = allOffers.filter((o) => o.city.name === city);
+  const sortType = useAppSelector((state) => state.sortType);
+  const offers = allOffers
+    .filter((o) => o.city.name === city)
+    .sort(SortTypeFunctionsMap[sortType]);
   const emptyOffers = !offers.length;
 
   return (

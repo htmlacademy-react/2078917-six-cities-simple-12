@@ -30,3 +30,10 @@ export enum OfferCardType {
   Offer = 'Offer',
   NearByOffer = 'NearByOffer'
 }
+
+export enum SortType {
+  Popular = 'Popular',
+  PriceLow = 'Price: low to high',
+  PriceHigh = 'Price: high to low',
+  TopRated = 'Top rated first'
+}
