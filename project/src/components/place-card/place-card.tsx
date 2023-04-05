@@ -17,8 +17,7 @@ export default function PlaceCard({
   onMouseLeave,
   cardType,
 }: PlaceCardProps): JSX.Element {
-  const { isPremium, id, previewImage, price, rating, description, type } =
-    offer;
+  const { isPremium, id, previewImage, price, rating, title, type } = offer;
 
   return (
     <article
@@ -39,7 +38,10 @@ export default function PlaceCard({
         className={cn(
           'place-card__image-wrapper',
           { 'cities__image-wrapper': cardType === OfferCardType.Offer },
-          { 'near-places__image-wrapper': cardType === OfferCardType.NearByOffer }
+          {
+            'near-places__image-wrapper':
+              cardType === OfferCardType.NearByOffer,
+          }
         )}
       >
         <Link to={`/offer/${id}`}>
@@ -66,7 +68,7 @@ export default function PlaceCard({
           </div>
         </div>
         <h2 className='place-card__name'>
-          <a href='/'>{description}</a>
+          <a href='/'>{title}</a>
         </h2>
         <p className='place-card__type'>{type}</p>
       </div>

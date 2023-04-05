@@ -5,11 +5,18 @@ import CityPlaces from '../../components/city-places/city-places';
 import { Helmet } from 'react-helmet-async';
 import cn from 'classnames';
 import { SortTypeFunctionsMap } from '../../maps';
+import Loading from '../loading/loading';
 
 export default function Main(): JSX.Element {
   const city = useAppSelector((state) => state.city);
   const allOffers = useAppSelector((state) => state.offers);
   const sortType = useAppSelector((state) => state.sortType);
+
+  const isOffersLoading = useAppSelector((state) => state.isOffersDataLoading);
+  if (isOffersLoading) {
+    return <Loading />;
+  }
+
   const offers = allOffers
     .filter((o) => o.city.name === city)
     .sort(SortTypeFunctionsMap[sortType]);
