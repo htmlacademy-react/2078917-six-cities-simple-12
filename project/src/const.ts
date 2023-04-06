@@ -10,6 +10,12 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN'
 }
 
+export const enum ApiRoute {
+  Offers = '/hotels',
+  Login = '/login',
+  Logout = '/logout'
+}
+
 export const CommentStarTitle = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
 
 export const MIN_CHARACTERS_IN_COMMENT = 50;

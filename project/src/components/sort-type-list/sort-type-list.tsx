@@ -55,15 +55,6 @@ export default function SortTypeList({
     }
   }
 
-  function handleClickList() {
-    setSortOptionsOpen((prev) => !prev);
-  }
-
-  function handleClickItem(sortType: SortType) {
-    onChange(sortType);
-    setSortOptionsOpen((prev) => !prev);
-  }
-
   function handleKeyDownItem(
     evt: React.KeyboardEvent<HTMLLIElement>,
     sortType: SortType
@@ -72,6 +63,15 @@ export default function SortTypeList({
       onChange(sortType);
       setSortOptionsOpen((prev) => !prev);
     }
+  }
+
+  function handleClickList() {
+    setSortOptionsOpen((prev) => !prev);
+  }
+
+  function handleClickItem(sortType: SortType) {
+    onChange(sortType);
+    setSortOptionsOpen((prev) => !prev);
   }
 
   return (

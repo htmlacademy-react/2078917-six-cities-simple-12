@@ -8,8 +8,6 @@ import PrivateRoute from '../private-route/private-route';
 import { HelmetProvider } from 'react-helmet-async';
 import { CommentForOffer } from '../../types/comment';
 import ScrollToTop from '../scroll-to-top/scroll-to-top';
-import { useAppDispatch } from '../../hooks/use-app-dispatch';
-import { loadOffers } from '../../store/action';
 import { offers } from '../../mocks/offers';
 
 type AppProps = {
@@ -17,9 +15,6 @@ type AppProps = {
 };
 
 export default function App({ comments }: AppProps): JSX.Element {
-
-  const dispatch = useAppDispatch();
-  dispatch(loadOffers(offers));
 
   return (
     <HelmetProvider>
