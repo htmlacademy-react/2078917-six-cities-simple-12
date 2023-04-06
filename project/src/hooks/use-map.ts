@@ -11,13 +11,7 @@ export default function useMap(
 
   useEffect(() => {
     if (mapRef.current !== null && city !== undefined && !isRenderedRef.current) {
-      const instance = new Map(mapRef.current, {
-        center: {
-          lat: city.location.latitude,
-          lng: city.location.longitude,
-        },
-        zoom: city.location.zoom,
-      });
+      const instance = new Map(mapRef.current);
 
       const layer = new TileLayer(
         'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',

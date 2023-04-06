@@ -30,23 +30,42 @@ export default function Map(props: MapProps): JSX.Element {
   const map = useMap(mapRef, city);
 
   useEffect(() => {
+    let markers: Marker[] = [];
+
     if (map) {
-      points.forEach((point) => {
+      markers = points.map((point) => {
+
         const marker = new Marker({
           lat: point.latitude,
           lng: point.longitude,
-        });
-
-        marker
+        })
           .setIcon(
-            point !== selectedPoint
-              ? defaultCustomIcon
-              : currentCustomIcon
+            point !== selectedPoint ? defaultCustomIcon : currentCustomIcon
           )
           .addTo(map);
+
+        return marker;
       });
     }
+
+    return () => {
+      if (map) {
+        markers.forEach((marker) => map.removeLayer(marker));
+      }
+    };
   }, [map, points, selectedPoint]);
+
+  useEffect(() => {
+    if (city) {
+      map?.setView(
+        {
+          lat: city.location.latitude,
+          lng: city.location.longitude,
+        },
+        city.location.zoom
+      );
+    }
+  }, [map, city]);
 
   return (
     <div
