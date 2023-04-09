@@ -27,7 +27,7 @@ export default function Main(): JSX.Element {
       <Helmet>
         <title>Six cities</title>
       </Helmet>
-      <Header userInfo={undefined} />
+      <Header />
       <main
         className={cn('page__main page__main--index', {
           'page__main--index-empty': emptyOffers,

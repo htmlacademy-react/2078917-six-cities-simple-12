@@ -19,6 +19,11 @@ export default function PlaceCard({
 }: PlaceCardProps): JSX.Element {
   const { isPremium, id, previewImage, price, rating, title, type } = offer;
 
+  const premiumMarkElement = (
+    <div className='place-card__mark'>
+      <span>&quot;Premium&quot;</span>
+    </div>
+  );
   return (
     <article
       className={cn(
@@ -29,11 +34,7 @@ export default function PlaceCard({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      {isPremium && (
-        <div className='place-card__mark'>
-          <span>&quot;Premium&quot;</span>
-        </div>
-      )}
+      {isPremium && premiumMarkElement}
       <div
         className={cn(
           'place-card__image-wrapper',

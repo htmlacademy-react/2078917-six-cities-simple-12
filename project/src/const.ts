@@ -1,7 +1,7 @@
 export enum AppRoute {
   Root = '/',
   Login = 'login',
-  Room = 'offer/:id'
+  Room = 'offer/:id',
 }
 
 export enum AuthorizationStatus {
@@ -43,3 +43,5 @@ export enum SortType {
   PriceHigh = 'Price: high to low',
   TopRated = 'Top rated first'
 }
+
+export const TIMEOUT_SHOW_ERROR = 2000;
