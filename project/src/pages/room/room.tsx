@@ -62,12 +62,18 @@ export default function Room({
     description,
   } = offer;
 
+  const premiumMarkElement = (
+    <div className='property__mark'>
+      <span>Premium</span>
+    </div>
+  );
+
   return (
     <>
       <Helmet>
         <title>{getTitleApartmentByType(type)}</title>
       </Helmet>
-      <Header userInfo={undefined} />
+      <Header />
       <main className='page__main page__main--property'>
         <section className='property'>
           {images.length > 0 && (
@@ -90,11 +96,7 @@ export default function Room({
           )}
           <div className='property__container container'>
             <div className='property__wrapper'>
-              {isPremium && (
-                <div className='property__mark'>
-                  <span>Premium</span>
-                </div>
-              )}
+              {isPremium && premiumMarkElement}
               <div className='property__name-wrapper'>
                 <h1 className='property__name'>{title}</h1>
               </div>

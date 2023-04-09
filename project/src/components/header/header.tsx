@@ -1,14 +1,10 @@
 import { Link } from 'react-router-dom';
-import { UserInfo } from '../../types/user';
+import { useAppSelector } from '../../hooks/use-app-selector';
 import Logo from '../logo/logo';
 
-type HeaderProps = {
-  userInfo: UserInfo | undefined;
-};
+export default function Header(): JSX.Element {
+  const userInfo = useAppSelector((state) => state.authorizationInfo);
 
-export default function Header({
-  userInfo = undefined,
-}: HeaderProps): JSX.Element {
   return (
     <header className='header'>
       <div className='container'>
@@ -21,7 +17,9 @@ export default function Header({
               <li className='header__nav-item user'>
                 {userInfo && (
                   <div className='header__nav-profile'>
-                    <div className='header__avatar-wrapper user__avatar-wrapper'></div>
+                    <div className='header__avatar-wrapper user__avatar-wrapper'>
+                      <img src={userInfo.avatarUrl} alt='User avatar' />
+                    </div>
                     <span className='header__user-name user__name'>
                       {userInfo.email}
                     </span>
@@ -41,7 +39,7 @@ export default function Header({
                 <li className='header__nav-item'>
                   <Link
                     className='header__nav-link'
-                    to='/'
+                    to='/logout'
                   >
                     <span className='header__signout'>Sign out</span>
                   </Link>
