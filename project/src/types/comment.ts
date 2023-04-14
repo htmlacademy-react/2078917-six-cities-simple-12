@@ -15,3 +15,8 @@ export type Comment = {
     name: string;
   };
 };
+
+export type UserComment = {
+  comment: string;
+  rating: number;
+};

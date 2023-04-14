@@ -1,9 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
+import { endSessionAction } from '../../store/api-actions';
 import Logo from '../logo/logo';
 
 export default function Header(): JSX.Element {
+
   const userInfo = useAppSelector((state) => state.authorizationInfo);
+
+  const dispatch = useAppDispatch();
 
   return (
     <header className='header'>
@@ -18,7 +23,10 @@ export default function Header(): JSX.Element {
                 {userInfo && (
                   <div className='header__nav-profile'>
                     <div className='header__avatar-wrapper user__avatar-wrapper'>
-                      <img src={userInfo.avatarUrl} alt='User avatar' />
+                      <img
+                        src={userInfo.avatarUrl}
+                        alt='User avatar'
+                      />
                     </div>
                     <span className='header__user-name user__name'>
                       {userInfo.email}
@@ -37,12 +45,12 @@ export default function Header(): JSX.Element {
               </li>
               {userInfo && (
                 <li className='header__nav-item'>
-                  <Link
+                  <button
                     className='header__nav-link'
-                    to='/logout'
+                    onClick={() => {dispatch(endSessionAction());}}
                   >
                     <span className='header__signout'>Sign out</span>
-                  </Link>
+                  </button>
                 </li>
               )}
             </ul>

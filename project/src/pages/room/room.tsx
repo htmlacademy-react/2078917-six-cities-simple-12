@@ -4,7 +4,6 @@ import CommentForm from '../../components/comment-form/comment-form';
 import Header from '../../components/header/header';
 import ReviewList from '../../components/review-list/review-list';
 import Map from '../../components/map/map';
-import { CommentForOffer } from '../../types/comment';
 import { Offer } from '../../types/offer';
 import {
   getPercentByRating,
@@ -13,40 +12,41 @@ import {
 } from '../../utils';
 import NotFound from '../not-found/not-found';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
-import { OfferCardType } from '../../const';
-import { useState } from 'react';
+import { AuthorizationStatus, OfferCardType } from '../../const';
+import { useEffect } from 'react';
+import { fetchRoomAction } from '../../store/api-actions';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
+import { useAppSelector } from '../../hooks/use-app-selector';
+import Loading from '../loading/loading';
 
-type RoomProps = {
-  offers: Offer[];
-  offersComments: CommentForOffer[];
-  nearbyOffers: Offer[];
-};
+export default function Room(): JSX.Element {
+  const { id: idAsString } = useParams();
+  const id = Number(idAsString);
+  const dispatch = useAppDispatch();
 
-export default function Room({
-  offers,
-  offersComments,
-  nearbyOffers,
-}: RoomProps): JSX.Element {
+  useEffect(() => {
+    if (!isNaN(id)) {
+      dispatch(fetchRoomAction(id));
+    }
+  }, [dispatch, id]);
 
-  const [selectedOffer, setSelectedOffer] = useState<Offer | undefined>(undefined);
+  const offer = useAppSelector((store) => store.offer);
+  const commentsForOffer = useAppSelector((store) => store.comments);
+  const nearbyOffers = useAppSelector((store) => store.nearbyOffers);
+  const isLoading = useAppSelector((store) => store.isOfferDataLoading);
+  const authorizationStatus = useAppSelector((store) => store.authorizationStatus);
 
-  const { id: idParam } = useParams();
-  const regexp = new RegExp(/^[0-9]+$/);
-
-  if (!regexp.test(String(idParam))) {
-    return <NotFound />;
-  }
-  const id = Number(idParam);
-
-  const offer = offers.find((o) => o.id === id);
-
-  if (!offer) {
+  if (isNaN(id)) {
     return <NotFound />;
   }
 
-  const commentsForOffer = offersComments.find(
-    (c) => c.offerId === id
-  )?.commentsForOffer;
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!isLoading && !offer) {
+    return <NotFound />;
+  }
 
   const {
     type,
@@ -60,7 +60,8 @@ export default function Room({
     goods,
     host,
     description,
-  } = offer;
+    location,
+  } = offer as Offer;
 
   const premiumMarkElement = (
     <div className='property__mark'>
@@ -69,7 +70,7 @@ export default function Room({
   );
 
   return (
-    <>
+    <div className='page'>
       <Helmet>
         <title>{getTitleApartmentByType(type)}</title>
       </Helmet>
@@ -79,7 +80,7 @@ export default function Room({
           {images.length > 0 && (
             <div className='property__gallery-container container'>
               <div className='property__gallery'>
-                {images.map((imageScr) => (
+                {images.slice(0, 6).map((imageScr) => (
                   <div
                     key={imageScr}
                     className='property__image-wrapper'
@@ -137,7 +138,7 @@ export default function Room({
                 <ul className='property__inside-list'>
                   {goods.map((good) => (
                     <li
-                      key={good}
+                      key={`feature-${good}`}
                       className='property__inside-item'
                     >
                       {good}
@@ -168,7 +169,9 @@ export default function Room({
               </div>
               {commentsForOffer && (
                 <ReviewList comments={commentsForOffer}>
-                  <CommentForm />
+                  {authorizationStatus === AuthorizationStatus.Auth && (
+                    <CommentForm offerId={id} />
+                  )}
                 </ReviewList>
               )}
             </div>
@@ -178,8 +181,8 @@ export default function Room({
               city={
                 nearbyOffers.length !== 0 ? nearbyOffers[0].city : undefined
               }
-              points={nearbyOffers.map((o) => o.location)}
-              selectedPoint={selectedOffer?.location}
+              points={nearbyOffers.map((o) => o.location).concat(location)}
+              selectedPoint={location}
             />
           </section>
         </section>
@@ -190,13 +193,11 @@ export default function Room({
             </h2>
             <PlaceCardList
               offers={nearbyOffers}
-              onOfferHover={(nearbyOffer: Offer) => setSelectedOffer(nearbyOffer)}
-              onOfferLeave={() => setSelectedOffer(undefined)}
               cardType={OfferCardType.NearByOffer}
             />
           </section>
         </div>
       </main>
-    </>
+    </div>
   );
 }

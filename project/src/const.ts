@@ -13,7 +13,10 @@ export enum AuthorizationStatus {
 export const enum ApiRoute {
   Offers = '/hotels',
   Login = '/login',
-  Logout = '/logout'
+  Logout = '/logout',
+  Offer = '/hotels/{offerId}',
+  Comments = '/comments/{offerId}',
+  NearbyOffers = '/hotels/{offerId}/nearby',
 }
 
 export const CommentStarTitle = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
