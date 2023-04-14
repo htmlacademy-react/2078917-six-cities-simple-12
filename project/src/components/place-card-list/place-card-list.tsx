@@ -5,8 +5,8 @@ import cn from 'classnames';
 
 type PlaceCardListProps = {
   offers: Offer[];
-  onOfferHover: (offer: Offer) => void;
-  onOfferLeave: () => void;
+  onOfferHover?: (offer: Offer) => void;
+  onOfferLeave?: () => void;
   cardType: OfferCardType;
 };
 
@@ -29,8 +29,8 @@ export default function PlaceCardList({
         <PlaceCard
           key={`card-item-${offer.id}`}
           offer={offer}
-          onMouseEnter={() => onOfferHover(offer)}
-          onMouseLeave={onOfferLeave}
+          onMouseEnter={onOfferHover && (() => onOfferHover(offer))}
+          onMouseLeave={onOfferLeave && onOfferLeave}
           cardType={cardType}
         />
       ))}

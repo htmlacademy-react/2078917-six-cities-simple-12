@@ -11,7 +11,7 @@ type TabsItemProps = {
 
 export default function TabsItem({
   city,
-  currentCity,
+  currentCity
 }: TabsItemProps): JSX.Element {
   const dispatch = useAppDispatch();
 
@@ -24,7 +24,6 @@ export default function TabsItem({
         to='/'
         onClick={() => {
           dispatch(changeCity(city));
-          // dispatch(changeOffers());
         }}
       >
         <span>{city}</span>

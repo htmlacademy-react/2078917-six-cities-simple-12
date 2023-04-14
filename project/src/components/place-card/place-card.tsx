@@ -6,8 +6,8 @@ import cn from 'classnames';
 
 type PlaceCardProps = {
   offer: Offer;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   cardType: OfferCardType;
 };
 
@@ -31,8 +31,8 @@ export default function PlaceCard({
         { 'cities__card': cardType === OfferCardType.Offer },
         { 'near-places__card': cardType === OfferCardType.NearByOffer }
       )}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={onMouseEnter && onMouseEnter}
+      onMouseLeave={onMouseLeave && onMouseLeave}
     >
       {isPremium && premiumMarkElement}
       <div

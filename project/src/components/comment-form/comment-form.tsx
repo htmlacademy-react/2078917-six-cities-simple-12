@@ -4,38 +4,69 @@ import {
   MIN_CHARACTERS_IN_COMMENT,
   RATING_STARS_NUMBER,
 } from '../../const';
+import { useAppDispatch } from '../../hooks/use-app-dispatch';
+import { useAppSelector } from '../../hooks/use-app-selector';
+import { sendCommentAction } from '../../store/api-actions';
+import { UserComment } from '../../types/comment';
 import StarRating from '../star-rating/star-rating';
 
-export default function CommentForm(): JSX.Element {
-  const [comment, setComment] = useState({
-    stars: 0,
+type CommentFormProps = {
+  offerId: number;
+}
+
+export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
+
+  const [comment, setComment] = useState<UserComment>({
+    rating: 0,
     comment: '',
   });
 
   const [isButtonEnabled, setButtonEnabled] = useState(false);
 
+  const dispatch = useAppDispatch();
+
+  const isCommentSending = useAppSelector((state) => state.isCommentSending);
+
+  const isCommentSent = useAppSelector((state) => state.isCommentSent);
+
   useEffect(() => {
     if (
       comment.comment.length >= MIN_CHARACTERS_IN_COMMENT &&
       comment.comment.length <= MAX_CHARACTERS_IN_COMMENT &&
-      comment.stars > 0
+      comment.rating > 0
     ) {
       setButtonEnabled(true);
     } else {
       setButtonEnabled(false);
     }
-  }, [comment.stars, comment.comment]);
+  }, [comment.rating, comment.comment]);
+
+  useEffect(() => {
+    if (isCommentSending) {
+      setButtonEnabled(false);
+    } else {
+      setButtonEnabled(true);
+    }
+  }, [isCommentSending]);
+
+  useEffect(() => {
+    if (isCommentSent) {
+      setComment({
+        rating: 0,
+        comment: '',
+      });
+    }
+  }, [isCommentSent]);
+
+  function handleSubmit(evt: FormEvent<HTMLFormElement>) {
+    evt.preventDefault();
+    dispatch(sendCommentAction({...comment, offerId}));
+  }
 
   return (
     <form
       className='reviews__form form'
-      onSubmit={(evt: FormEvent<HTMLFormElement>) => {
-        evt.preventDefault();
-        setComment({
-          stars: 0,
-          comment: '',
-        });
-      }}
+      onSubmit={handleSubmit}
     >
       <label
         className='reviews__label form__label'
@@ -54,10 +85,10 @@ export default function CommentForm(): JSX.Element {
               onChange={() => {
                 setComment({
                   ...comment,
-                  stars: starsNumber,
+                  rating: starsNumber,
                 });
               }}
-              isChecked={comment.stars === starsNumber}
+              isChecked={comment.rating === starsNumber}
             />
           );
         })}
