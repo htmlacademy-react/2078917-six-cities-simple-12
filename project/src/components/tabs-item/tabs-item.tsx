@@ -1,7 +1,8 @@
 import cn from 'classnames';
+import { MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
-import { changeCity } from '../../store/action';
+import { setCity } from '../../store/app-process/app-process';
 import { CityName } from '../../types/store';
 
 type TabsItemProps = {
@@ -11,9 +12,14 @@ type TabsItemProps = {
 
 export default function TabsItem({
   city,
-  currentCity
+  currentCity,
 }: TabsItemProps): JSX.Element {
   const dispatch = useAppDispatch();
+
+  function handleClick(evt: MouseEvent) {
+    dispatch(setCity(city));
+    evt.preventDefault();
+  }
 
   return (
     <li className='locations__item'>
@@ -22,9 +28,7 @@ export default function TabsItem({
           'tabs__item--active': city === currentCity,
         })}
         to='/'
-        onClick={() => {
-          dispatch(changeCity(city));
-        }}
+        onClick={(evt: MouseEvent) => handleClick(evt)}
       >
         <span>{city}</span>
       </Link>

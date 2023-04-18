@@ -1,4 +1,6 @@
-import { RATING_STARS_NUMBER } from './const';
+import { cityNames, RATING_STARS_NUMBER } from './const';
+import { Review } from './types/comment';
+import { CityName } from './types/store';
 
 export function getPercentByRating(rating: number): string {
   const roundedRating = Math.round(rating) * 100 / RATING_STARS_NUMBER;
@@ -24,4 +26,23 @@ export function formatDateToMonthAndYear(date: Date): string {
 
 export function formatDateToYearMonthDay(date: Date): string {
   return date.toISOString().split('T')[0];
+}
+
+export function orderReviewCallback(
+  currentReview: Review,
+  nextReview: Review
+) {
+  const currentDate = Date.parse(currentReview.date);
+  const nextDate = Date.parse(nextReview.date);
+
+  return nextDate - currentDate;
+}
+
+export function getRandomItem<T>(array: Array<T>): T {
+  const index = Math.floor(Math.random() * array.length);
+  return array[index];
+}
+
+export function getRandomCity(): CityName {
+  return getRandomItem([...cityNames]);
 }

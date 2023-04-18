@@ -1,53 +1,23 @@
 import { SortType } from '../../const';
 import cn from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useRef } from 'react';
+import usePopupList from '../../hooks/use-popup-list';
 
 type SortTypeListProps = {
   onChange: (sortType: SortType) => void;
   currentSortType: SortType;
 };
 
-export default function SortTypeList({
+function SortTypeList({
   onChange,
   currentSortType,
 }: SortTypeListProps): JSX.Element {
+
   const sortTypeKeys = Object.keys(SortType) as Array<keyof typeof SortType>;
-  const [isSortOptionsOpen, setSortOptionsOpen] = useState(false);
+
   const sortTypeListRef = useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    function handleKeyPress(evt: KeyboardEvent) {
-      if (evt.key === 'Escape') {
-        setSortOptionsOpen(false);
-      }
-    }
-
-    function handleClick(evt: MouseEvent) {
-      const target = evt.target as HTMLElement;
-
-      if (sortTypeListRef !== null && sortTypeListRef.current !== null) {
-        const sortTypeListClasses = Object.values(
-          sortTypeListRef.current.classList
-        )
-          .map((c) => `.${c}`)
-          .join('');
-        if (!target.closest(sortTypeListClasses)) {
-          setSortOptionsOpen(false);
-          evt.stopPropagation();
-        }
-      }
-    }
-
-    if (isSortOptionsOpen) {
-      document.addEventListener('keydown', handleKeyPress);
-      document.addEventListener('click', handleClick, true);
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress);
-      document.removeEventListener('click', handleClick, true);
-    };
-  });
+  const [isSortOptionsOpen, setSortOptionsOpen] = usePopupList(sortTypeListRef);
 
   function handleKeyDownList(evt: React.KeyboardEvent<HTMLUListElement>) {
     if (evt.key === 'Enter') {
@@ -116,3 +86,6 @@ export default function SortTypeList({
     </form>
   );
 }
+
+export default memo(SortTypeList, (prevProps, nextProps) =>
+  prevProps.currentSortType === nextProps.currentSortType);

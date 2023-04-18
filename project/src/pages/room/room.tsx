@@ -4,7 +4,6 @@ import CommentForm from '../../components/comment-form/comment-form';
 import Header from '../../components/header/header';
 import ReviewList from '../../components/review-list/review-list';
 import Map from '../../components/map/map';
-import { Offer } from '../../types/offer';
 import {
   getPercentByRating,
   getTitleApartmentByType,
@@ -13,28 +12,19 @@ import {
 import NotFound from '../not-found/not-found';
 import PlaceCardList from '../../components/place-card-list/place-card-list';
 import { AuthorizationStatus, OfferCardType } from '../../const';
-import { useEffect } from 'react';
-import { fetchRoomAction } from '../../store/api-actions';
-import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
 import Loading from '../loading/loading';
+import { getIsOfferDataLoading } from '../../store/data-process/selectors';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
+import useGetRoom from '../../hooks/use-get-room';
 
 export default function Room(): JSX.Element {
   const { id: idAsString } = useParams();
   const id = Number(idAsString);
-  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!isNaN(id)) {
-      dispatch(fetchRoomAction(id));
-    }
-  }, [dispatch, id]);
-
-  const offer = useAppSelector((store) => store.offer);
-  const commentsForOffer = useAppSelector((store) => store.comments);
-  const nearbyOffers = useAppSelector((store) => store.nearbyOffers);
-  const isLoading = useAppSelector((store) => store.isOfferDataLoading);
-  const authorizationStatus = useAppSelector((store) => store.authorizationStatus);
+  const [offer, commentsForOffer, nearbyOffers] = useGetRoom(id);
+  const isLoading = useAppSelector(getIsOfferDataLoading);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   if (isNaN(id)) {
     return <NotFound />;
@@ -44,7 +34,7 @@ export default function Room(): JSX.Element {
     return <Loading />;
   }
 
-  if (!isLoading && !offer) {
+  if (!offer) {
     return <NotFound />;
   }
 
@@ -61,13 +51,17 @@ export default function Room(): JSX.Element {
     host,
     description,
     location,
-  } = offer as Offer;
+  } = offer;
 
   const premiumMarkElement = (
     <div className='property__mark'>
       <span>Premium</span>
     </div>
   );
+
+  const mapCity = nearbyOffers.find((o) => o.city)?.city;
+
+  const mapPoints = nearbyOffers.map((o) => o.location).concat(location);
 
   return (
     <div className='page'>
@@ -178,10 +172,8 @@ export default function Room(): JSX.Element {
           </div>
           <section className='property__map map'>
             <Map
-              city={
-                nearbyOffers.length !== 0 ? nearbyOffers[0].city : undefined
-              }
-              points={nearbyOffers.map((o) => o.location).concat(location)}
+              city={mapCity}
+              points={mapPoints}
               selectedPoint={location}
             />
           </section>

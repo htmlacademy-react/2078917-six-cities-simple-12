@@ -7,7 +7,8 @@ import { OfferCardType, SortType } from '../../const';
 import SortTypeList from '../sort-type-list/sort-type-list';
 import { useAppSelector } from '../../hooks/use-app-selector';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
-import { setSort } from '../../store/action';
+import { getSortType } from '../../store/app-process/selectors';
+import {setSort} from '../../store/app-process/app-process';
 
 type CityPlacesProps = {
   currentCity: CityName;
@@ -18,7 +19,7 @@ export default function CityPlaces({
   currentCity,
   offers,
 }: CityPlacesProps): JSX.Element {
-  const currentSortType = useAppSelector((state) => state.sortType);
+  const currentSortType = useAppSelector(getSortType);
   const dispatch = useAppDispatch();
 
   const [selectedOffer, setSelectedOffer] = useState<Offer | undefined>(
@@ -29,6 +30,18 @@ export default function CityPlaces({
   const points = offers.map((offer) => offer.location);
   const selectedPoint = selectedOffer?.location;
 
+  function handleOfferHover(offer: Offer) {
+    setSelectedOffer(offer);
+  }
+
+  function handleOfferLeave() {
+    setSelectedOffer(undefined);
+  }
+
+  function handleSortTypeChange(sortType: SortType) {
+    dispatch(setSort(sortType));
+  }
+
   return (
     <div className='cities__places-container container'>
       <section className='cities__places places'>
@@ -37,15 +50,13 @@ export default function CityPlaces({
           {offersNumber} places to stay in {currentCity}
         </b>
         <SortTypeList
-          onChange={(sortType: SortType) => {
-            dispatch(setSort(sortType));
-          }}
+          onChange={(sortType) => handleSortTypeChange(sortType)}
           currentSortType={currentSortType}
         />
         <PlaceCardList
           offers={offers}
-          onOfferHover={(offer) => setSelectedOffer(offer)}
-          onOfferLeave={() => setSelectedOffer(undefined)}
+          onOfferHover={handleOfferHover}
+          onOfferLeave={handleOfferLeave}
           cardType={OfferCardType.Offer}
         />
       </section>

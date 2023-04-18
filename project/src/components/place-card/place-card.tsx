@@ -31,8 +31,8 @@ export default function PlaceCard({
         { 'cities__card': cardType === OfferCardType.Offer },
         { 'near-places__card': cardType === OfferCardType.NearByOffer }
       )}
-      onMouseEnter={onMouseEnter && onMouseEnter}
-      onMouseLeave={onMouseLeave && onMouseLeave}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {isPremium && premiumMarkElement}
       <div

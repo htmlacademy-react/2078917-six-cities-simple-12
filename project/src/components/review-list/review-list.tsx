@@ -1,8 +1,8 @@
-import Review from '../review/review';
-import { Comment } from '../../types/comment';
+import ReviewItem from '../review-item/review-item';
+import { Review } from '../../types/comment';
 
 type ReviewListProps = {
-  comments: Comment[];
+  comments: Review[];
   children?: React.ReactNode;
 };
 
@@ -18,9 +18,9 @@ export default function ReviewList({
       </h2>
       <ul className='reviews__list'>
         {comments.map((comment) => (
-          <Review
+          <ReviewItem
             key={`review ${comment.id}`}
-            comment={comment}
+            review={comment}
           />
         ))}
       </ul>
