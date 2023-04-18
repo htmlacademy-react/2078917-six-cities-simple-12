@@ -1,14 +1,20 @@
-import { Comment } from '../../types/comment';
-import { formatDateToMonthAndYear, formatDateToYearMonthDay, getPercentByRating } from '../../utils';
+import { Review } from '../../types/comment';
+import {
+  formatDateToMonthAndYear,
+  formatDateToYearMonthDay,
+  getPercentByRating,
+} from '../../utils';
 
 type ReviewProps = {
-  comment: Comment;
+  review: Review;
 };
 
-export default function Review({ comment }: ReviewProps): JSX.Element {
+export default function ReviewItem({
+  review: comment,
+}: ReviewProps): JSX.Element {
   return (
     <li
-      key={comment.id}
+      key={`review-${comment.id}`}
       className='reviews__item'
     >
       <div className='reviews__user user'>

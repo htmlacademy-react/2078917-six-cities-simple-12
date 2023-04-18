@@ -5,16 +5,13 @@ import NotFound from '../../pages/not-found/not-found';
 import { Route, Routes } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { HelmetProvider } from 'react-helmet-async';
-import { CommentForOffer } from '../../types/comment';
 import ScrollToTop from '../scroll-to-top/scroll-to-top';
 import HistoryRouter from '../history-router/history-router';
 import browserHistory from '../../browser-history';
+import AuthRoute from '../auth-route/auth-route';
 
-type AppProps = {
-  comments: CommentForOffer[];
-};
+export default function App(): JSX.Element {
 
-export default function App({ comments }: AppProps): JSX.Element {
   return (
     <HelmetProvider>
       <HistoryRouter history={browserHistory}>
@@ -27,13 +24,15 @@ export default function App({ comments }: AppProps): JSX.Element {
             />
             <Route
               path={AppRoute.Room}
-              element={
-                <Room />
-              }
+              element={<Room />}
             />
             <Route
               path={AppRoute.Login}
-              element={<Login />}
+              element={
+                <AuthRoute>
+                  <Login />
+                </AuthRoute>
+              }
             />
             <Route
               path='*'

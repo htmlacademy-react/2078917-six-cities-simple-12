@@ -1,34 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
-import { store } from '.';
-import {
-  ApiRoute,
-  AppRoute,
-  AuthorizationStatus,
-  TIMEOUT_SHOW_ERROR,
-} from '../const';
+import { ApiRoute, AppRoute, TIMEOUT_SHOW_ERROR } from '../const';
 import { saveToken, dropToken } from '../services/token';
-import { Comment, UserComment } from '../types/comment';
+import { Review, UserComment } from '../types/comment';
 import { Offer } from '../types/offer';
 import { AppDispatch, State } from '../types/store';
 import { AuthorizationInfo, Credentials } from '../types/user';
-import {
-  isCommentSending,
-  isCommentSent,
-  loadComments,
-  loadNearbyOffers,
-  loadOffer,
-  loadOffers,
-  redirectToRoute,
-  setAuthorizationInfo,
-  setAuthorizationStatus,
-  setError,
-  setOfferDataLoadingStatus,
-  setOffersDataLoadingStatus,
-} from './action';
+import { redirectToRoute } from './action';
 
 export const fetchOffersAction = createAsyncThunk<
-  void,
+  Offer[],
   undefined,
   {
     dispatch: AppDispatch;
@@ -36,14 +17,12 @@ export const fetchOffersAction = createAsyncThunk<
     extra: AxiosInstance;
   }
 >('data/fetchOffers', async (_arg, { dispatch, extra: api }) => {
-  dispatch(setOffersDataLoadingStatus(true));
   const { data } = await api.get<Offer[]>(ApiRoute.Offers);
-  dispatch(setOffersDataLoadingStatus(false));
-  dispatch(loadOffers(data));
+  return data;
 });
 
 export const checkAuthorizationStatusAction = createAsyncThunk<
-  void,
+  AuthorizationInfo,
   undefined,
   {
     dispatch: AppDispatch;
@@ -51,14 +30,8 @@ export const checkAuthorizationStatusAction = createAsyncThunk<
     extra: AxiosInstance;
   }
 >('data/checkAuthorizationStatus', async (_arg, { dispatch, extra: api }) => {
-  try {
-    const { data } = await api.get<AuthorizationInfo>(ApiRoute.Login);
-    dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
-    dispatch(setAuthorizationInfo(data));
-  } catch {
-    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-    dispatch(setAuthorizationInfo(undefined));
-  }
+  const { data } = await api.get<AuthorizationInfo>(ApiRoute.Login);
+  return data;
 });
 
 export const endSessionAction = createAsyncThunk<
@@ -73,14 +46,12 @@ export const endSessionAction = createAsyncThunk<
   try {
     await api.get<AuthorizationInfo>(ApiRoute.Login);
   } finally {
-    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
-    dispatch(setAuthorizationInfo(undefined));
     dropToken();
   }
 });
 
 export const getAuthorizationStatusAction = createAsyncThunk<
-  void,
+  AuthorizationInfo,
   Credentials,
   {
     dispatch: AppDispatch;
@@ -94,64 +65,19 @@ export const getAuthorizationStatusAction = createAsyncThunk<
       email,
       password,
     });
-    dispatch(setAuthorizationInfo(data));
-    dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
     saveToken(data.token);
     dispatch(redirectToRoute(AppRoute.Root));
+
+    return data;
   }
 );
 
-export const clearErrorAction = createAsyncThunk('app/clearError', () => {
-  setTimeout(() => store.dispatch(setError(null)), TIMEOUT_SHOW_ERROR);
-});
-
-export const fetchOfferAction = createAsyncThunk<
-  void,
-  number,
-  {
-    dispatch: AppDispatch;
-    state: State;
-    extra: AxiosInstance;
-  }
->('data/fetchOffer', async (offerId, { dispatch, extra: api }) => {
-  const { data } = await api.get<Offer>(
-    ApiRoute.Offer.replace('{offerId}', String(offerId))
-  );
-  dispatch(loadOffer(data));
-});
-
-export const fetchCommentsAction = createAsyncThunk<
-  void,
-  number,
-  {
-    dispatch: AppDispatch;
-    state: State;
-    extra: AxiosInstance;
-  }
->('data/fetchComments', async (offerId, { dispatch, extra: api }) => {
-  const { data } = await api.get<Comment[]>(
-    ApiRoute.Comments.replace('{offerId}', String(offerId))
-  );
-  dispatch(loadComments(data));
-});
-
-export const fetchNearbyOffersAction = createAsyncThunk<
-  void,
-  number,
-  {
-    dispatch: AppDispatch;
-    state: State;
-    extra: AxiosInstance;
-  }
->('data/fetchNearbyOffers', async (offerId, { dispatch, extra: api }) => {
-  const { data } = await api.get<Offer[]>(
-    ApiRoute.NearbyOffers.replace('{offerId}', String(offerId))
-  );
-  dispatch(loadNearbyOffers(data));
+export const clearErrorAction = createAsyncThunk('app/clearError', async () => {
+  await new Promise((f) => setTimeout(f, TIMEOUT_SHOW_ERROR));
 });
 
 export const fetchRoomAction = createAsyncThunk<
-  void,
+  [Offer | null, Review[], Offer[]],
   number,
   {
     dispatch: AppDispatch;
@@ -159,31 +85,38 @@ export const fetchRoomAction = createAsyncThunk<
     extra: AxiosInstance;
   }
 >('data/fetchRoom', async (offerId, { dispatch, extra: api }) => {
-  dispatch(setOfferDataLoadingStatus(true));
+  const [offerResult, reviewResult, nearbyOffersResult] =
+    await Promise.allSettled([
+      api.get<Offer>(ApiRoute.Offer.replace('{offerId}', String(offerId))),
+      api.get<Review[]>(
+        ApiRoute.Comments.replace('{offerId}', String(offerId))
+      ),
+      api.get<Offer[]>(
+        ApiRoute.NearbyOffers.replace('{offerId}', String(offerId))
+      ),
+    ]);
 
-  try {
-    const { data: offer } = await api.get<Offer>(
-      ApiRoute.Offer.replace('{offerId}', String(offerId))
-    );
+  let offer: Offer | null = null;
+  let reviews: Review[] = [];
+  let nearbyOffers: Offer[] = [];
 
-    const { data: comments } = await api.get<Comment[]>(
-      ApiRoute.Comments.replace('{offerId}', String(offerId))
-    );
-
-    const { data: nearbyOffers } = await api.get<Offer[]>(
-      ApiRoute.NearbyOffers.replace('{offerId}', String(offerId))
-    );
-
-    dispatch(loadOffer(offer));
-    dispatch(loadComments(comments));
-    dispatch(loadNearbyOffers(nearbyOffers));
-  } finally {
-    dispatch(setOfferDataLoadingStatus(false));
+  if (offerResult.status === 'fulfilled') {
+    offer = offerResult.value.data;
   }
+
+  if (reviewResult.status === 'fulfilled') {
+    reviews = reviewResult.value.data;
+  }
+
+  if (nearbyOffersResult.status === 'fulfilled') {
+    nearbyOffers = nearbyOffersResult.value.data;
+  }
+
+  return [offer, reviews, nearbyOffers];
 });
 
 export const sendCommentAction = createAsyncThunk<
-  void,
+  Review[],
   UserComment & { offerId: number },
   {
     dispatch: AppDispatch;
@@ -193,21 +126,13 @@ export const sendCommentAction = createAsyncThunk<
 >(
   'data/sendComment',
   async ({ comment, rating, offerId }, { dispatch, extra: api }) => {
-    dispatch(isCommentSending(true));
-    dispatch(isCommentSent(false));
-
-    try {
-      const { data } = await api.post<Comment[]>(
-        ApiRoute.Comments.replace('{offerId}', String(offerId)),
-        {
-          comment,
-          rating,
-        }
-      );
-      dispatch(loadComments(data));
-      dispatch(isCommentSent(true));
-    } finally {
-      dispatch(isCommentSending(true));
-    }
+    const { data } = await api.post<Review[]>(
+      ApiRoute.Comments.replace('{offerId}', String(offerId)),
+      {
+        comment,
+        rating,
+      }
+    );
+    return data;
   }
 );

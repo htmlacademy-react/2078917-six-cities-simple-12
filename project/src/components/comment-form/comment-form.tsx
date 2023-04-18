@@ -1,14 +1,10 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import {
-  MAX_CHARACTERS_IN_COMMENT,
-  MIN_CHARACTERS_IN_COMMENT,
-  RATING_STARS_NUMBER,
-} from '../../const';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
+import useButtonEnable from '../../hooks/use-button-enable';
 import { sendCommentAction } from '../../store/api-actions';
-import { UserComment } from '../../types/comment';
-import StarRating from '../star-rating/star-rating';
+import { getIsCommentSent } from '../../store/data-process/selectors';
+import StarRatingList from '../star-rating-list/star-rating-list';
 
 type CommentFormProps = {
   offerId: number;
@@ -16,52 +12,39 @@ type CommentFormProps = {
 
 export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
 
-  const [comment, setComment] = useState<UserComment>({
-    rating: 0,
-    comment: '',
-  });
-
-  const [isButtonEnabled, setButtonEnabled] = useState(false);
+  const [userComment, setUserComment] = useState('');
+  const [userRating, setUserRating] = useState(0);
 
   const dispatch = useAppDispatch();
-
-  const isCommentSending = useAppSelector((state) => state.isCommentSending);
-
-  const isCommentSent = useAppSelector((state) => state.isCommentSent);
-
-  useEffect(() => {
-    if (
-      comment.comment.length >= MIN_CHARACTERS_IN_COMMENT &&
-      comment.comment.length <= MAX_CHARACTERS_IN_COMMENT &&
-      comment.rating > 0
-    ) {
-      setButtonEnabled(true);
-    } else {
-      setButtonEnabled(false);
-    }
-  }, [comment.rating, comment.comment]);
-
-  useEffect(() => {
-    if (isCommentSending) {
-      setButtonEnabled(false);
-    } else {
-      setButtonEnabled(true);
-    }
-  }, [isCommentSending]);
+  const isCommentSent = useAppSelector(getIsCommentSent);
+  const isButtonEnabled = useButtonEnable(userComment, userRating);
 
   useEffect(() => {
     if (isCommentSent) {
-      setComment({
-        rating: 0,
-        comment: '',
-      });
+      setUserComment('');
+      setUserRating(0);
     }
   }, [isCommentSent]);
 
   function handleSubmit(evt: FormEvent<HTMLFormElement>) {
     evt.preventDefault();
-    dispatch(sendCommentAction({...comment, offerId}));
+    dispatch(sendCommentAction({
+      comment: userComment,
+      rating:userRating,
+      offerId
+    }));
   }
+
+  function handleUserCommentChange(target: HTMLTextAreaElement) {
+    setUserComment(target.value);
+  }
+
+  const handleRatingChange = useCallback(
+    (starsNumber: number) => {
+      setUserRating(starsNumber);
+    },
+    [setUserRating]
+  );
 
   return (
     <form
@@ -75,36 +58,19 @@ export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
         Your review
       </label>
       <div className='reviews__rating-form form__rating'>
-        {Array.from({ length: RATING_STARS_NUMBER }).map((_, index) => {
-          const revertIndex = RATING_STARS_NUMBER - index - 1;
-          const starsNumber = revertIndex + 1;
-          return (
-            <StarRating
-              key={`star-rating-${revertIndex}`}
-              id={revertIndex}
-              onChange={() => {
-                setComment({
-                  ...comment,
-                  rating: starsNumber,
-                });
-              }}
-              isChecked={comment.rating === starsNumber}
-            />
-          );
-        })}
+        <StarRatingList
+          onChange={handleRatingChange}
+          currentRating={userRating}
+        />
       </div>
       <textarea
         className='reviews__textarea form__textarea'
         id='review'
         name='review'
         placeholder='Tell how was your stay, what you like and what can be improved'
-        value={comment.comment}
-        onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) => {
-          setComment({
-            ...comment,
-            comment: target.value,
-          });
-        }}
+        value={userComment}
+        onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) =>
+          handleUserCommentChange(target)}
       >
       </textarea>
       <div className='reviews__button-wrapper'>

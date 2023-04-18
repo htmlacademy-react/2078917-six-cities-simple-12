@@ -16,6 +16,7 @@ export default function PlaceCardList({
   onOfferLeave,
   cardType,
 }: PlaceCardListProps): JSX.Element {
+
   return (
     <div
       className={cn(
@@ -30,7 +31,7 @@ export default function PlaceCardList({
           key={`card-item-${offer.id}`}
           offer={offer}
           onMouseEnter={onOfferHover && (() => onOfferHover(offer))}
-          onMouseLeave={onOfferLeave && onOfferLeave}
+          onMouseLeave={onOfferLeave}
           cardType={cardType}
         />
       ))}

@@ -6,21 +6,29 @@ import { Helmet } from 'react-helmet-async';
 import cn from 'classnames';
 import { SortTypeFunctionsMap } from '../../maps';
 import Loading from '../loading/loading';
+import NoPlaceAvailable from '../../components/no-place-available/no-place-available';
+import { useMemo } from 'react';
+import { getCity, getSortType } from '../../store/app-process/selectors';
+import { getIsOffersDataLoading, getOffers } from '../../store/data-process/selectors';
 
 export default function Main(): JSX.Element {
-  const city = useAppSelector((state) => state.city);
-  const allOffers = useAppSelector((state) => state.offers);
-  const sortType = useAppSelector((state) => state.sortType);
 
-  const isOffersLoading = useAppSelector((state) => state.isOffersDataLoading);
+  const city = useAppSelector(getCity);
+  const allOffers = useAppSelector(getOffers);
+  const sortType = useAppSelector(getSortType);
+  const isOffersLoading = useAppSelector(getIsOffersDataLoading);
+
+  const offers = useMemo(() =>
+    allOffers
+      .filter((o) => o.city.name === city)
+      .sort(SortTypeFunctionsMap[sortType])
+  , [allOffers, city, sortType]);
+
+  const isEmptyOffers = !offers.length;
+
   if (isOffersLoading) {
     return <Loading />;
   }
-
-  const offers = allOffers
-    .filter((o) => o.city.name === city)
-    .sort(SortTypeFunctionsMap[sortType]);
-  const emptyOffers = !offers.length;
 
   return (
     <div className='page page--gray page--main'>
@@ -30,25 +38,14 @@ export default function Main(): JSX.Element {
       <Header />
       <main
         className={cn('page__main page__main--index', {
-          'page__main--index-empty': emptyOffers,
+          'page__main--index-empty': isEmptyOffers,
         })}
       >
         <h1 className='visually-hidden'>Cities</h1>
         <TabsList currentCity={city} />
         <div className='cities'>
-          {emptyOffers ? (
-            <div className='cities__places-container cities__places-container--empty container'>
-              <section className='cities__no-places'>
-                <div className='cities__status-wrapper tabs__content'>
-                  <b className='cities__status'>No places to stay available</b>
-                  <p className='cities__status-description'>
-                    We could not find any property available at the moment in
-                    Dusseldorf
-                  </p>
-                </div>
-              </section>
-              <div className='cities__right-section'></div>
-            </div>
+          {isEmptyOffers ? (
+            <NoPlaceAvailable />
           ) : (
             <CityPlaces
               currentCity={city}

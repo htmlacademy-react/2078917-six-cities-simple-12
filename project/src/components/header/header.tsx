@@ -3,10 +3,12 @@ import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
 import { endSessionAction } from '../../store/api-actions';
 import Logo from '../logo/logo';
+import { memo } from 'react';
+import { getAuthorizationInfo } from '../../store/user-process/selectors';
 
-export default function Header(): JSX.Element {
+function Header(): JSX.Element {
 
-  const userInfo = useAppSelector((state) => state.authorizationInfo);
+  const userInfo = useAppSelector(getAuthorizationInfo);
 
   const dispatch = useAppDispatch();
 
@@ -19,21 +21,37 @@ export default function Header(): JSX.Element {
           </div>
           <nav className='header__nav'>
             <ul className='header__nav-list'>
-              <li className='header__nav-item user'>
-                {userInfo && (
-                  <div className='header__nav-profile'>
-                    <div className='header__avatar-wrapper user__avatar-wrapper'>
-                      <img
-                        src={userInfo.avatarUrl}
-                        alt='User avatar'
-                      />
+              {userInfo && (
+                <>
+                  <li className='header__nav-item user'>
+                    <div className='header__nav-profile'>
+                      <div className='header__avatar-wrapper user__avatar-wrapper'>
+                        <img
+                          src={userInfo.avatarUrl}
+                          alt='User avatar'
+                        />
+                      </div>
+                      <span className='header__user-name user__name'>
+                        {userInfo.email}
+                      </span>
                     </div>
-                    <span className='header__user-name user__name'>
-                      {userInfo.email}
-                    </span>
-                  </div>
-                )}
-                {!userInfo && (
+                  </li>
+                  <li className='header__nav-item'>
+                    <Link
+                      to="/"
+                      className='header__nav-link'
+                      onClick={(evt) => {
+                        dispatch(endSessionAction());
+                        evt.preventDefault();
+                      }}
+                    >
+                      <span className='header__signout'>Sign out</span>
+                    </Link>
+                  </li>
+                </>
+              )}
+              {!userInfo && (
+                <li className='header__nav-item user'>
                   <Link
                     className='header__nav-link header__nav-link--profile'
                     to='/login'
@@ -41,16 +59,6 @@ export default function Header(): JSX.Element {
                     <div className='header__avatar-wrapper user__avatar-wrapper'></div>
                     <span className='header__login'>Sign in</span>
                   </Link>
-                )}
-              </li>
-              {userInfo && (
-                <li className='header__nav-item'>
-                  <button
-                    className='header__nav-link'
-                    onClick={() => {dispatch(endSessionAction());}}
-                  >
-                    <span className='header__signout'>Sign out</span>
-                  </button>
                 </li>
               )}
             </ul>
@@ -60,3 +68,5 @@ export default function Header(): JSX.Element {
     </header>
   );
 }
+
+export default memo(Header);

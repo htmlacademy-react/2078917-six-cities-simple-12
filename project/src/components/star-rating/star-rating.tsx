@@ -11,6 +11,7 @@ export default function StarRating({
   onChange,
   isChecked,
 }: StarRatingProps): JSX.Element {
+
   const starsCount = id + 1;
 
   return (
