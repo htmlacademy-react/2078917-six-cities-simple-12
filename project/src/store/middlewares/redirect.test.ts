@@ -12,7 +12,7 @@ const fakeHistory = {
   },
 };
 
-jest.mock('history/browser', () => fakeHistory);
+jest.mock('../../browser-history', () => fakeHistory);
 
 const middlewares = [redirect];
 
