@@ -1,15 +1,17 @@
-import { CommentStarTitle } from '../../const';
+import { CommentStarTitles } from '../../const';
 
 type StarRatingProps = {
   id: number;
   onChange: () => void;
   isChecked: boolean;
+  disabled: boolean;
 };
 
 export default function StarRating({
   id,
   onChange,
   isChecked,
+  disabled
 }: StarRatingProps): JSX.Element {
 
   const starsCount = id + 1;
@@ -24,11 +26,12 @@ export default function StarRating({
         checked={isChecked}
         onChange={onChange}
         value={starsCount}
+        disabled={disabled}
       />
       <label
         htmlFor={`${starsCount}-stars`}
         className='reviews__rating-label form__rating-label'
-        title={CommentStarTitle[id]}
+        title={CommentStarTitles[id]}
       >
         <svg
           className='form__star-image'

@@ -38,7 +38,7 @@ export function orderReviewCallback(
   return nextDate - currentDate;
 }
 
-export function getRandomItem<T>(array: Array<T>): T {
+function getRandomItem<T>(array: Array<T>): T {
   const index = Math.floor(Math.random() * array.length);
   return array[index];
 }

@@ -5,11 +5,13 @@ import {memo} from 'react';
 type StarRatingListProps = {
   currentRating: number;
   onChange: (starsNumber: number) => void;
+  disabled: boolean;
 }
 
 function StarRatingList({
   currentRating,
   onChange,
+  disabled,
 }: StarRatingListProps): JSX.Element {
   const starIds = Array.from(
     { length: RATING_STARS_NUMBER },
@@ -20,12 +22,13 @@ function StarRatingList({
     <div className='reviews__rating-form form__rating'>
       {starIds.map((starsNumber) => {
         const index = starsNumber - 1;
-        return(
+        return (
           <StarRating
             key={`star-rating-${starsNumber}`}
             id={index}
             onChange={() => onChange(starsNumber)}
             isChecked={currentRating === starsNumber}
+            disabled={disabled}
           />
         );
       })}

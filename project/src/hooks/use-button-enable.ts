@@ -9,25 +9,27 @@ export default function useButtonEnable(userComment: string, userRating: number)
 
   const [isButtonEnabled, setButtonEnabled] = useState(false);
 
+  const [isFormCorrect, setFormCorrect] = useState(false);
+
   useEffect(() => {
     if (
       userComment.length >= MIN_CHARACTERS_IN_COMMENT &&
       userComment.length <= MAX_CHARACTERS_IN_COMMENT &&
       userRating > 0
     ) {
-      setButtonEnabled(true);
+      setFormCorrect(true);
     } else {
-      setButtonEnabled(false);
+      setFormCorrect(false);
     }
   }, [userComment, userRating]);
 
   useEffect(() => {
-    if (isCommentSending) {
+    if (isCommentSending || !isFormCorrect) {
       setButtonEnabled(false);
     } else {
       setButtonEnabled(true);
     }
-  }, [isCommentSending]);
+  }, [isCommentSending, isFormCorrect]);
 
   return isButtonEnabled;
 

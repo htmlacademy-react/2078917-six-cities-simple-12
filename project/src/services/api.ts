@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import { getToken } from './token';
 import {StatusCodes} from 'http-status-codes';
-import {processErrorHandle} from './process-error-handle';
+import { processErrorHandle } from './process-error-handle';
 
 const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.BAD_REQUEST]: true,
@@ -16,7 +16,7 @@ const StatusCodeMapping: Record<number, boolean> = {
 
 const shouldDisplayError = (response: AxiosResponse) => !!StatusCodeMapping[response.status];
 
-const BASE_URL = 'https://12.react.pages.academy/six-cities-simpleddd';
+const BASE_URL = 'https://12.react.pages.academy/six-cities-simple';
 const TIMEOUT = 5000;
 
 export const createAPI = (): AxiosInstance => {
@@ -26,6 +26,7 @@ export const createAPI = (): AxiosInstance => {
   });
 
   api.interceptors.request.use((config: AxiosRequestConfig) => {
+
     const token = getToken();
 
     if (token && config.headers) {

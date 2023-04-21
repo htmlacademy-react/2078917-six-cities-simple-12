@@ -21,7 +21,7 @@ export const enum ApiRoute {
   NearbyOffers = '/hotels/{offerId}/nearby',
 }
 
-export const CommentStarTitle = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
+export const CommentStarTitles = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
 
 export const MIN_CHARACTERS_IN_COMMENT = 50;
 
@@ -39,7 +39,7 @@ export const URL_MARKER_CURRENT =
 
 export const cityNames = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'] as const;
 
-export const initialCity: CityName = 'Paris';
+export const INITIAL_CITY: CityName = 'Paris';
 
 export enum OfferCardType {
   Offer = 'Offer',
