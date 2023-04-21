@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { initialCity, NameSpace, SortType } from '../../const';
+import { INITIAL_CITY, NameSpace, SortType } from '../../const';
 import { AppProcess, CityName } from '../../types/store';
-import { clearErrorAction } from '../api-actions';
+import { clearErrorAction, sendCommentAction } from '../api-actions';
 
 const initialState: AppProcess = {
-  city: initialCity,
+  city: INITIAL_CITY,
   sortType: SortType.Popular,
   error: null,
 };
@@ -27,6 +27,9 @@ export const appProcess = createSlice({
     builder
       .addCase(clearErrorAction.fulfilled, (state) => {
         state.error = null;
+      })
+      .addCase(sendCommentAction.rejected, (state, action) => {
+        state.error = action.error.message ?? 'something went wrong';
       });
   }
 });

@@ -7,14 +7,14 @@ import { AppRoute } from '../../const';
 import { HelmetProvider } from 'react-helmet-async';
 import ScrollToTop from '../scroll-to-top/scroll-to-top';
 import HistoryRouter from '../history-router/history-router';
-import browserHistory from '../../browser-history';
+import history from 'history/browser';
 import AuthRoute from '../auth-route/auth-route';
 
 export default function App(): JSX.Element {
 
   return (
     <HelmetProvider>
-      <HistoryRouter history={browserHistory}>
+      <HistoryRouter history={history}>
         <ScrollToTop />
         <Routes>
           <Route path={AppRoute.Root}>

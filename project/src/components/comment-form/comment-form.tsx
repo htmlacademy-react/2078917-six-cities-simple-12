@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react'
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { useAppSelector } from '../../hooks/use-app-selector';
 import useButtonEnable from '../../hooks/use-button-enable';
+import useFormDisable from '../../hooks/use-form-disable';
 import { sendCommentAction } from '../../store/api-actions';
 import { getIsCommentSent } from '../../store/data-process/selectors';
 import StarRatingList from '../star-rating-list/star-rating-list';
@@ -18,6 +19,7 @@ export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
   const dispatch = useAppDispatch();
   const isCommentSent = useAppSelector(getIsCommentSent);
   const isButtonEnabled = useButtonEnable(userComment, userRating);
+  const isFormDisabled = useFormDisable();
 
   useEffect(() => {
     if (isCommentSent) {
@@ -28,6 +30,7 @@ export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
 
   function handleSubmit(evt: FormEvent<HTMLFormElement>) {
     evt.preventDefault();
+
     dispatch(sendCommentAction({
       comment: userComment,
       rating:userRating,
@@ -61,6 +64,7 @@ export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
         <StarRatingList
           onChange={handleRatingChange}
           currentRating={userRating}
+          disabled={isFormDisabled}
         />
       </div>
       <textarea
@@ -71,6 +75,7 @@ export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
         value={userComment}
         onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) =>
           handleUserCommentChange(target)}
+        disabled={isFormDisabled}
       >
       </textarea>
       <div className='reviews__button-wrapper'>

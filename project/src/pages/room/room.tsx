@@ -59,9 +59,23 @@ export default function Room(): JSX.Element {
     </div>
   );
 
-  const mapCity = nearbyOffers.find((o) => o.city)?.city;
+  const nearbyOffersElement = (
+    <div className='container'>
+      <section className='near-places places'>
+        <h2 className='near-places__title'>
+          Other places in the neighbourhood
+        </h2>
+        <PlaceCardList
+          offers={nearbyOffers}
+          cardType={OfferCardType.NearByOffer}
+        />
+      </section>
+    </div>
+  );
 
-  const mapPoints = nearbyOffers.map((o) => o.location).concat(location);
+  const mapOffers = nearbyOffers.concat(offer);
+  const mapPoints = mapOffers.map((o) => o.location);
+  const mapCity = mapOffers.find((o) => o.city)?.city;
 
   return (
     <div className='page'>
@@ -178,17 +192,7 @@ export default function Room(): JSX.Element {
             />
           </section>
         </section>
-        <div className='container'>
-          <section className='near-places places'>
-            <h2 className='near-places__title'>
-              Other places in the neighbourhood
-            </h2>
-            <PlaceCardList
-              offers={nearbyOffers}
-              cardType={OfferCardType.NearByOffer}
-            />
-          </section>
-        </div>
+        {nearbyOffers.length && nearbyOffersElement}
       </main>
     </div>
   );

@@ -19,13 +19,13 @@ function SortTypeList({
 
   const [isSortOptionsOpen, setSortOptionsOpen] = usePopupList(sortTypeListRef);
 
-  function handleKeyDownList(evt: React.KeyboardEvent<HTMLUListElement>) {
+  function handleListKeyDown(evt: React.KeyboardEvent<HTMLUListElement>) {
     if (evt.key === 'Enter') {
       setSortOptionsOpen((prev) => !prev);
     }
   }
 
-  function handleKeyDownItem(
+  function handleItemKeyDown(
     evt: React.KeyboardEvent<HTMLLIElement>,
     sortType: SortType
   ) {
@@ -35,11 +35,11 @@ function SortTypeList({
     }
   }
 
-  function handleClickList() {
+  function handleListClick() {
     setSortOptionsOpen((prev) => !prev);
   }
 
-  function handleClickItem(sortType: SortType) {
+  function handleItemClick(sortType: SortType) {
     onChange(sortType);
     setSortOptionsOpen((prev) => !prev);
   }
@@ -50,10 +50,10 @@ function SortTypeList({
       <span
         className='places__sorting-type'
         tabIndex={0}
-        onClick={handleClickList}
-        onKeyDown={handleKeyDownList}
+        onClick={handleListClick}
+        onKeyDown={handleListKeyDown}
       >
-        {currentSortType}
+        {` ${currentSortType} `}
         <svg
           className='places__sorting-arrow'
           width='7'
@@ -75,9 +75,9 @@ function SortTypeList({
               'places__option--active': currentSortType === SortType[type],
             })}
             tabIndex={0}
-            onClick={() => handleClickItem(SortType[type])}
+            onClick={() => handleItemClick(SortType[type])}
             onKeyDown={(evt: React.KeyboardEvent<HTMLLIElement>) =>
-              handleKeyDownItem(evt, SortType[type])}
+              handleItemKeyDown(evt, SortType[type])}
           >
             {SortType[type]}
           </li>
