@@ -44,6 +44,7 @@ function Header(): JSX.Element {
                         dispatch(endSessionAction());
                         evt.preventDefault();
                       }}
+                      data-testid='signOut'
                     >
                       <span className='header__signout'>Sign out</span>
                     </Link>
@@ -55,6 +56,7 @@ function Header(): JSX.Element {
                   <Link
                     className='header__nav-link header__nav-link--profile'
                     to='/login'
+                    data-testid='signIn'
                   >
                     <div className='header__avatar-wrapper user__avatar-wrapper'></div>
                     <span className='header__login'>Sign in</span>

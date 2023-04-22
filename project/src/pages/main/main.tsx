@@ -40,12 +40,13 @@ export default function Main(): JSX.Element {
         className={cn('page__main page__main--index', {
           'page__main--index-empty': isEmptyOffers,
         })}
+        data-testid='mainContainer'
       >
         <h1 className='visually-hidden'>Cities</h1>
         <TabsList currentCity={city} />
         <div className='cities'>
           {isEmptyOffers ? (
-            <NoPlaceAvailable />
+            <NoPlaceAvailable currentCity={city} />
           ) : (
             <CityPlaces
               currentCity={city}
