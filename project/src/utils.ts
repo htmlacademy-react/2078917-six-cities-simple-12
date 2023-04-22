@@ -46,3 +46,9 @@ function getRandomItem<T>(array: Array<T>): T {
 export function getRandomCity(): CityName {
   return getRandomItem([...cityNames]);
 }
+
+export const hasLetterAndNumber = (text: string): boolean => {
+  const hasLetter = /[a-zA-Z]/.test(text);
+  const hasNumber = /\d/.test(text);
+  return hasLetter && hasNumber;
+};

@@ -5,9 +5,9 @@ import Logo from '../../components/logo/logo';
 import { useAppDispatch } from '../../hooks/use-app-dispatch';
 import { store } from '../../store';
 import { getAuthorizationStatusAction } from '../../store/api-actions';
-import { setCity } from '../../store/app-process/app-process';
+import { setCity, setError } from '../../store/app-process/app-process';
 import { Credentials } from '../../types/user';
-import { getRandomCity } from '../../utils';
+import { getRandomCity, hasLetterAndNumber } from '../../utils';
 
 export default function Login(): JSX.Element {
 
@@ -19,10 +19,14 @@ export default function Login(): JSX.Element {
   });
 
   function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
-    store.dispatch(
-      getAuthorizationStatusAction(credentials)
-    );
     evt.preventDefault();
+
+    if(!hasLetterAndNumber(credentials.password)) {
+      store.dispatch(setError('Password must contain at least one number and one letter'));
+    }
+    else {
+      store.dispatch(getAuthorizationStatusAction(credentials));
+    }
   }
 
   function handleEmailChange(evt: React.ChangeEvent<HTMLInputElement>) {
