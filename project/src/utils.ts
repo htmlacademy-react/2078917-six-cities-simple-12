@@ -48,7 +48,7 @@ export function getRandomCity(): CityName {
 }
 
 export const hasLetterAndNumber = (text: string): boolean => {
-  const hasLetter = /[a-zA-Z]/.test(text);
+  const hasLetter = /\D/i.test(text);
   const hasNumber = /\d/.test(text);
   return hasLetter && hasNumber;
 };
