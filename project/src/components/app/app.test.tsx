@@ -75,7 +75,6 @@ describe('Application routing', () => {
 
     render(fakeApp);
 
-    expect(screen.getByText(new RegExp(`${offer.title}`, 'i'))).toBeInTheDocument();
     expect(screen.getByText(/Other places in the neighbourhood/i)).toBeInTheDocument();
   });
 

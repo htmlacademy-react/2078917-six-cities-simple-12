@@ -1,10 +1,9 @@
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { Route, Routes } from 'react-router';
-import { cityNames, NameSpace } from '../../const';
+import { cityNames } from '../../const';
 import { CityName } from '../../types/store';
 import HistoryRouter from '../history-router/history-router';
 import TabsList from './tabs-list';

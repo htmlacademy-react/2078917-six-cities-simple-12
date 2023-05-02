@@ -26,7 +26,7 @@ export default function CityPlaces({
     undefined
   );
   const offersNumber = offers.length;
-  const city = offers.at(0)?.city;
+  const city = offers[0]?.city;
   const points = offers.map((offer) => offer.location);
   const selectedPoint = selectedOffer?.location;
 
