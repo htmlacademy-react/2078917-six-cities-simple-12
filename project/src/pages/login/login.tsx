@@ -82,6 +82,7 @@ export default function Login(): JSX.Element {
                   required
                   value={credentials.email}
                   onChange={handleEmailChange}
+                  data-testid='login'
                 />
               </div>
               <div className='login__input-wrapper form__input-wrapper'>
@@ -94,11 +95,13 @@ export default function Login(): JSX.Element {
                   required
                   value={credentials.password}
                   onChange={handlePasswordChange}
+                  data-testid='password'
                 />
               </div>
               <button
                 className='login__submit form__submit button'
                 type='submit'
+                data-testid='sign-in'
               >
                 Sign in
               </button>

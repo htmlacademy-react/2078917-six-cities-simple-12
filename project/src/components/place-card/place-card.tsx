@@ -44,8 +44,12 @@ export default function PlaceCard({
               cardType === OfferCardType.NearByOffer,
           }
         )}
+        data-testid='imageWrapper'
       >
-        <Link to={`/offer/${id}`}>
+        <Link
+          to={`/offer/${id}`}
+          data-testid='toRoomFromImage'
+        >
           <img
             className='place-card__image'
             src={previewImage}
@@ -69,7 +73,12 @@ export default function PlaceCard({
           </div>
         </div>
         <h2 className='place-card__name'>
-          <Link to={`/offer/${id}`}>{title}</Link>
+          <Link
+            to={`/offer/${id}`}
+            data-testid='toRoomFromTitle'
+          >
+            {title}
+          </Link>
         </h2>
         <p className='place-card__type'>{type}</p>
       </div>

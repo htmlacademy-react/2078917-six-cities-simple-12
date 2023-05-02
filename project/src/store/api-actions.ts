@@ -16,7 +16,7 @@ export const fetchOffersAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/fetchOffers', async (_arg, { dispatch, extra: api }) => {
+>('data/fetchOffers', async (_arg, { extra: api }) => {
   const { data } = await api.get<Offer[]>(ApiRoute.Offers);
   return data;
 });
@@ -29,7 +29,7 @@ export const checkAuthorizationStatusAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/checkAuthorizationStatus', async (_arg, { dispatch, extra: api }) => {
+>('data/checkAuthorizationStatus', async (_arg, { extra: api }) => {
   const { data } = await api.get<AuthorizationInfo>(ApiRoute.Login);
   return data;
 });
@@ -42,9 +42,9 @@ export const endSessionAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/endSession', async (_arg, { dispatch, extra: api }) => {
+>('data/endSession', async (_arg, { extra: api }) => {
   try {
-    await api.get<AuthorizationInfo>(ApiRoute.Login);
+    await api.delete<AuthorizationInfo>(ApiRoute.Logout);
   } finally {
     dropToken();
   }
@@ -84,7 +84,7 @@ export const fetchRoomAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/fetchRoom', async (offerId, { dispatch, extra: api }) => {
+>('data/fetchRoom', async (offerId, { extra: api }) => {
   const [offerResult, reviewResult, nearbyOffersResult] =
     await Promise.allSettled([
       api.get<Offer>(ApiRoute.Offer.replace('{offerId}', String(offerId))),
@@ -125,7 +125,7 @@ export const sendCommentAction = createAsyncThunk<
   }
 >(
   'data/sendComment',
-  async ({ comment, rating, offerId }, { dispatch, extra: api }) => {
+  async ({ comment, rating, offerId }, { extra: api }) => {
     const { data } = await api.post<Review[]>(
       ApiRoute.Comments.replace('{offerId}', String(offerId)),
       {

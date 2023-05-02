@@ -76,6 +76,7 @@ export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
         onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) =>
           handleUserCommentChange(target)}
         disabled={isFormDisabled}
+        data-testid='commentText'
       >
       </textarea>
       <div className='reviews__button-wrapper'>
@@ -88,6 +89,7 @@ export default function CommentForm({offerId}: CommentFormProps): JSX.Element {
           className='reviews__submit form__submit button'
           type='submit'
           disabled={!isButtonEnabled}
+          data-testid="submit"
         >
           Submit
         </button>

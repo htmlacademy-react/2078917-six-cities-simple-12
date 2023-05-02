@@ -55,7 +55,7 @@ export default function Room(): JSX.Element {
 
   const premiumMarkElement = (
     <div className='property__mark'>
-      <span>Premium</span>
+      <span data-testid='premiumOffer'>Premium</span>
     </div>
   );
 
@@ -148,6 +148,7 @@ export default function Room(): JSX.Element {
                     <li
                       key={`feature-${good}`}
                       className='property__inside-item'
+                      data-testid='featureItem'
                     >
                       {good}
                     </li>
@@ -164,6 +165,7 @@ export default function Room(): JSX.Element {
                       width='74'
                       height='74'
                       alt='Host avatar'
+                      data-testid='hostAvatar'
                     />
                   </div>
                   <span className='property__user-name'>{host.name}</span>
@@ -175,7 +177,7 @@ export default function Room(): JSX.Element {
                   <p className='property__text'>{description}</p>
                 </div>
               </div>
-              {commentsForOffer && (
+              {commentsForOffer.length && (
                 <ReviewList comments={commentsForOffer}>
                   {authorizationStatus === AuthorizationStatus.Auth && (
                     <CommentForm offerId={id} />
