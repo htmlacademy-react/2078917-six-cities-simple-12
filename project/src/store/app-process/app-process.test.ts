@@ -1,56 +1,73 @@
 import { INITIAL_CITY, SortType } from '../../const';
-import { CityName } from '../../types/store';
+import { AppProcess, CityName } from '../../types/store';
+import { clearErrorAction, sendCommentAction } from '../api-actions';
 import { appProcess, setCity, setError, setSort } from './app-process';
 
 describe('Reducer: AppProcess', () => {
-  it('without additional parameters should return initial state', () => {
-    expect(appProcess.reducer(undefined, { type: 'UNKNOWN_ACTION' })).toEqual({
-      city: INITIAL_CITY,
-      sortType: SortType.Popular,
-      error: null,
-    });
-  });
-
-  it('should return given city name', () => {
-    const cityName: CityName = 'Cologne';
-    const state = {
+  let state: AppProcess;
+  beforeEach(() => {
+    state = {
       city: INITIAL_CITY,
       sortType: SortType.Popular,
       error: null,
     };
-    expect(appProcess.reducer(state, setCity(cityName))).toEqual({
-      city: cityName,
-      sortType: SortType.Popular,
-      error: null,
+  });
+
+  it('without additional parameters should return initial state', () => {
+    expect(appProcess.reducer(undefined, { type: 'UNKNOWN_ACTION' })).toEqual(
+      state
+    );
+  });
+
+  it('should return given city name', () => {
+    const city: CityName = 'Cologne';
+    expect(appProcess.reducer(state, setCity(city))).toEqual({
+      ...state,
+      city,
     });
   });
 
   it('should return given error text', () => {
-    const errorText = 'ERROR_TEST';
-    const state = {
-      city: INITIAL_CITY,
-      sortType: SortType.Popular,
-      error: null,
-    };
-    expect(appProcess.reducer(state, setError(errorText))).toEqual({
-      city: INITIAL_CITY,
-      sortType: SortType.Popular,
-      error: errorText,
+    const error = 'ERROR_TEST';
+    expect(appProcess.reducer(state, setError(error))).toEqual({
+      ...state,
+      error,
     });
   });
 
-  it('should return giver sort type', () => {
+  it('should return given sort type', () => {
     const sortType = SortType.TopRated;
-    const state = {
-      city: INITIAL_CITY,
-      sortType: SortType.Popular,
-      error: null,
-    };
     expect(appProcess.reducer(state, setSort(sortType))).toEqual({
-      city: INITIAL_CITY,
-      sortType: sortType,
+      ...state,
+      sortType,
+    });
+  });
+
+  it('should set error to NULL if clearErrorAction fulfilled', () => {
+    expect(
+      appProcess.reducer(state, {
+        type: clearErrorAction.fulfilled.type,
+      })
+    ).toEqual({
+      ...state,
       error: null,
+    });
+  });
+
+  it('should set error to given payload if sendCommentAction rejected', () => {
+    const errorStr = 'ERROR_STRING';
+    const error = {
+      message: errorStr,
+    };
+
+    expect(
+      appProcess.reducer(state, {
+        type: sendCommentAction.rejected.type,
+        error,
+      })
+    ).toEqual({
+      ...state,
+      error: errorStr,
     });
   });
 });
-

@@ -27,11 +27,13 @@ export default function StarRating({
         onChange={onChange}
         value={starsCount}
         disabled={disabled}
+        data-testid={`star-${starsCount}`}
       />
       <label
         htmlFor={`${starsCount}-stars`}
         className='reviews__rating-label form__rating-label'
         title={CommentStarTitles[id]}
+        data-testid={`star-label-${starsCount}`}
       >
         <svg
           className='form__star-image'

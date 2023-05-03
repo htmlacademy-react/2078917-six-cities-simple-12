@@ -25,6 +25,7 @@ export default function PlaceCardList({
         { 'near-places__list': cardType === OfferCardType.NearByOffer },
         { 'tabs__content': cardType === OfferCardType.Offer }
       )}
+      data-testid='placeCardList'
     >
       {offers.map((offer) => (
         <PlaceCard

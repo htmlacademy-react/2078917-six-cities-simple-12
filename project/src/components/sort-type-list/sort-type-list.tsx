@@ -52,6 +52,7 @@ function SortTypeList({
         tabIndex={0}
         onClick={handleListClick}
         onKeyDown={handleListKeyDown}
+        data-testid='currentSortType'
       >
         {` ${currentSortType} `}
         <svg

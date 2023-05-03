@@ -38,10 +38,10 @@ export const dataProcess = createSlice({
     setOfferDataLoadingStatus: (state, action: PayloadAction<boolean>) => {
       state.isOfferDataLoading = action.payload;
     },
-    isCommentSending: (state, action: PayloadAction<boolean>) => {
+    setCommentDataSendingStatus: (state, action: PayloadAction<boolean>) => {
       state.isCommentSending = action.payload;
     },
-    isCommentSent: (state, action: PayloadAction<boolean>) => {
+    setCommentDataSentStatus: (state, action: PayloadAction<boolean>) => {
       state.isCommentSent = action.payload;
     }
   },
@@ -97,6 +97,6 @@ export const {
   loadNearbyOffers,
   setOffersDataLoadingStatus,
   setOfferDataLoadingStatus,
-  isCommentSending,
-  isCommentSent,
+  setCommentDataSendingStatus,
+  setCommentDataSentStatus,
 } = dataProcess.actions;
